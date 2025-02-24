@@ -1,36 +1,44 @@
 const choices = ["rock", "paper", "scissors"]
-
-function startGame() {
+const resultEl = document.getElementById("result")
+const scoreEl = document.getElementById("score")
+let score = 0
+function startGame(userInput) {
     console.log("You are playing Rock, Paper, Scissors!")
-    let usrInpt = getUserInput()
-    console.log("You chose " + usrInpt)
+    userInput = userInput.toLowerCase()
+    console.log("You chose " + userInput)
     let oppInpt = getAIChoice()
     console.log("Your opponent chose " + oppInpt)
-    if (usrInpt === oppInpt) {
+    if (userInput === oppInpt) {
         gameEnd("It's a tie!")
-    } else if (usrInpt === "rock") {
-        console.log("You chose " + usrInpt)
+    } else if (userInput === "rock") {
         if (oppInpt === "paper") {
+            score -= 1
             gameEnd("You lose.")
         } else {
+            score += 1
             gameEnd("You win!")
         }
-    } else if (usrInpt === "scissors") {
+    } else if (userInput === "scissors") {
         if (oppInpt === "rock") {
+            score -= 1
             gameEnd("You lose.")
         } else {
+            score += 1
             gameEnd("You win!")
         }
-    } else if (usrInpt === "paper") {
+    } else if (userInput === "paper") {
         if (oppInpt === "scissors") {
+            score -= 1
             gameEnd("You lose.")
         } else {
+            score += 1
             gameEnd("You win!")
         }
     }
+    scoreEl.innerText = "Score: " + score
 }
 
-function getUserInput() {
+/*function getUserInput() {
     let usrInpt = prompt("Rock, paper, or scissors?")
     usrInpt = usrInpt.toLowerCase()
     if (usrInpt === "rock" || usrInpt === "paper" || usrInpt === "scissors") {
@@ -39,7 +47,7 @@ function getUserInput() {
         console.log("Please make sure you type rock, paper, or scissors.")
         startGame()
     }
-}
+}*/
 
 function getAIChoice() {
     let randInt = Math.floor(Math.random() * 3)
@@ -48,13 +56,22 @@ function getAIChoice() {
 }
 
 function gameEnd(text) {
-    usrInpt = prompt(text + " Play again ?(Y/N)")
-    usrInpt = usrInpt.toLowerCase()
-    if (usrInpt === "y") {
-        startGame()
-    } else {
-        console.log("Thanks for playing.")
+    console.log(text)
+    let message = ""
+    if (score === 3) {
+        message = "Congrats! You won."
+        score = 0
+    } else if (score === -3) {
+        message = "Sorry, you lost."
+        score = 0
     }
+    resultEl.innerText = message
 }
 
-startGame()
+const buttons = document.querySelectorAll("button")
+
+buttons.forEach(button => {
+    button.addEventListener("click", () => {
+        startGame(button.innerText)
+    })
+});
